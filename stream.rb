@@ -1,5 +1,5 @@
 require 'mongo'
-require 'twitter-text'
+require 'twitter'
 
 class Tweet  
   def self.create!(tweets)
@@ -20,11 +20,11 @@ class Tweet
     end
 end
 
-Twitter.stream("mytwittername", "secret") do |status|
+Twitter.stream("stphn", "secret") do |status|
   Tweet.create!(status)
 end
 
-collection.find(:user => { :screen_name => "glenngillen" })
+#collection.find(:user => { :screen_name => "glenngillen" })
 
 #
 # data returned as follows
