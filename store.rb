@@ -5,6 +5,8 @@ require 'twitter'
 require './twitter_init'
 require './variables'
 require 'mongo'
+require 'htmlentities'
+require 'htmlentities'
 
 source_tweets = []
 
@@ -27,7 +29,7 @@ class Tweet
     end
 end
 
-puts "PARAMS: #{params}" if params.any?
+##puts "PARAMS: #{params}" if params.any?
 
 def filtered_tweets(tweets)
   html_decoder = HTMLEntities.new
@@ -84,5 +86,6 @@ end
   end
   
 source_tweets.each do |t|
-  Tweet.create!(t)
+  data = t.to_hash
+  Tweet.create!(data)
 end
