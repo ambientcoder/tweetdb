@@ -6,7 +6,7 @@ require './twitter_init'
 require './variables'
 require 'mongo'
 require 'htmlentities'
-require 'htmlentities'
+#require 'json'
 
 source_tweets = []
 
@@ -86,6 +86,7 @@ end
   end
   
 source_tweets.each do |t|
-  data = t.to_hash
+  data = { "tweet" => t}
+#    tweets.insert({"data" => data});
   Tweet.create!(data)
 end
