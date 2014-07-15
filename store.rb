@@ -6,7 +6,7 @@ require './twitter_init'
 require './variables'
 require 'mongo'
 require 'htmlentities'
-#require 'json'
+require 'json'
 
 source_tweets = []
 
@@ -45,11 +45,11 @@ def filtered_tweets(tweets)
     source_tweets = source_tweets.reject {|t| t =~ /^@/ }
   end
 
-  source_tweets.each do |t| 
-    t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
-    t.gsub!(/^(@[\d\w_]+\s?)+/, '')
-    t += "." if t !~ /[.?;:!]$/
-  end
+##  source_tweets.each do |t| 
+##    t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
+##    t.gsub!(/^(@[\d\w_]+\s?)+/, '')
+##    t += "." if t !~ /[.?;:!]$/
+##  end
 
   source_tweets
 end
@@ -87,6 +87,5 @@ end
   
 source_tweets.each do |t|
   data = { "tweet" => t}
-#    tweets.insert({"data" => data});
   Tweet.create!(data)
 end
