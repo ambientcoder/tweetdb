@@ -7,6 +7,8 @@ require './variables'
 require 'mongo'
 require 'htmlentities'
 
+include Mongo
+
 source_tweets = []
 
 class Tweet
@@ -16,7 +18,11 @@ class Tweet
 
   private
     def self.establish_connection
-      Mongo::Connection.new.db("twitter")
+      #Mongo::Connection.new.db("twitter")
+
+     client = Mongo::MongoClient.from_uri(uri)
+     db_name = uri[%r{/([^/\?]+)(\?|$)}, 1]
+     db = client.db(db_name)
     end
 
     def self.db
