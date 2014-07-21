@@ -50,7 +50,7 @@ def filtered_tweets(tweets)
     t.gsub!(/[”“]/, '"')
     t.gsub!(/[‘’]/, "'")
     t.strip!
-    t << "." if t !~ /[.,?;:!'"\])\u2026]$/
+  #  t << "." if t !~ /[.,?;:!'"\])\u2026]$/
   end
 
   source_tweets
