@@ -7,6 +7,8 @@ require './variables'
 require 'mongo'
 require 'htmlentities'
 
+include Mongo
+
 source_tweets = []
 
 class Tweet
@@ -14,9 +16,17 @@ class Tweet
     collection.insert(tweets)
   end
 
+  def self.fetch
+# get all rows {}. dont get _id field .get tweet field. map to ruby hash from mongo hash. map the tweet key values
+    cursor = collection.find({},{:fields => {"_id" => 0, "tweet" => 1}}).limit(25).map { |h| h["tweet"] }
+  end
+
   private
     def self.establish_connection
-      Mongo::Connection.new.db("twitter")
+     uri = $uri
+     client = Mongo::MongoClient.from_uri($uri)
+     db_name = uri[%r{/([^/\?]+)(\?|$)}, 1]
+     db = client.db(db_name)
     end
 
     def self.db
@@ -34,7 +44,7 @@ def filtered_tweets(tweets)
   html_decoder = HTMLEntities.new
   include_urls = $include_urls || params["include_urls"]
   include_replies = $include_replies || params["include_replies"]
-  source_tweets = tweets.map {|t| html_decoder.decode(t.text).gsub(/\b(RT|MT) .+/, '') }
+  source_tweets = tweets.map {|t| html_decoder.decode(t).gsub(/\b(RT|MT) .+/, '') }
 
   if !include_urls
     source_tweets = source_tweets.reject {|t| t =~ /(https?:\/\/)/ }
@@ -45,42 +55,21 @@ def filtered_tweets(tweets)
   end
 
   source_tweets.each do |t| 
+#    t.gsub!(/\b(RT|MT) .+/, '')
     t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
     t.gsub!(/(@[\d\w_]+\s?)+/, '')
     t.gsub!(/[”“]/, '"')
     t.gsub!(/[‘’]/, "'")
     t.strip!
-  #  t << "." if t !~ /[.,?;:!'"\])\u2026]$/
   end
 
   source_tweets
 end
 
-client = Twitter::REST::Client.new do |config|
-  config.consumer_key = $consumer_key
-  config.consumer_secret = $consumer_secret
-  config.access_token = $access_token
-  config.access_token_secret = $access_token_secret
-end
-
-  # Fetch a thousand tweets
   begin
-## get stuff from remote mogodb
-  # user_tweets = 
-##    user_tweets = client.user_timeline($source_account, :count => 20, :trim_user => true, :include_rts => false)
+    user_tweets = Tweet.fetch
 #    max_id = user_tweets.last.id
     source_tweets += filtered_tweets(user_tweets)
-  
-    # Twitter only returns up to 3200 of a user timeline, includes retweets.
-#    17.times do
-#      user_tweets = client.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false, :max_id => max_id - 1)
-#      puts "MAX_ID #{max_id} TWEETS: #{user_tweets.length}"
-#      break if user_tweets.last.nil?
-#      max_id = user_tweets.last.id
-#      source_tweets += filtered_tweets(user_tweets)
-#    end
-#  rescue => ex
-#    puts ex.message
   end
   
   puts "#{source_tweets.length} tweets found"
@@ -90,7 +79,5 @@ end
   end
   
 source_tweets.each do |t|
-puts t
-#  data = { "tweet" => t}
-#  Tweet.create!(data)
+  puts "#{t}"
 end
