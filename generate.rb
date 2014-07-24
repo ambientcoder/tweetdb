@@ -31,10 +31,11 @@ end
 ##puts "PARAMS: #{params}" if params.any?
 
 def filtered_tweets(tweets)
-  html_decoder = HTMLEntities.new
+ # html_decoder = HTMLEntities.new
   include_urls = $include_urls || params["include_urls"]
   include_replies = $include_replies || params["include_replies"]
-  source_tweets = tweets.map {|t| html_decoder.decode(t.text).gsub(/\b(RT|MT) .+/, '') }
+  ##source_tweets = tweets.map {|t| html_decoder.decode(t.text).gsub(/\b(RT|MT) .+/, '') }
+  source_tweets = tweets.map {|t| {id: t.id, text: t.text} }
 
   if !include_urls
     source_tweets = source_tweets.reject {|t| t =~ /(https?:\/\/)/ }
@@ -44,14 +45,14 @@ def filtered_tweets(tweets)
     source_tweets = source_tweets.reject {|t| t =~ /^@/ }
   end
 
-  source_tweets.each do |t| 
-    t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
-    t.gsub!(/(@[\d\w_]+\s?)+/, '')
-    t.gsub!(/[”“]/, '"')
-    t.gsub!(/[‘’]/, "'")
-    t.strip!
+  ##source_tweets.each do |t| 
+  ##  t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
+  ##  t.gsub!(/(@[\d\w_]+\s?)+/, '')
+  ##  t.gsub!(/[”“]/, '"')
+  ##  t.gsub!(/[‘’]/, "'")
+  ##  t.strip!
   #  t << "." if t !~ /[.,?;:!'"\])\u2026]$/
-  end
+  ##end
 
   source_tweets
 end
@@ -67,6 +68,18 @@ end
   begin
     user_tweets = client.user_timeline($source_account, :count => 20, :trim_user => true, :include_rts => false)
     max_id = user_tweets.last.id
+
+#puts "ATTRS"
+#puts user_tweets.first.attrs
+#puts "METHODS"
+#puts user_tweets.first.methods
+#    puts user_tweets.first.text
+#    puts user_tweets.first.id
+#    puts user_tweets.first.retweet_count
+#    puts user_tweets.first.retweeted?
+#    puts user_tweets.first.favorited?
+#    puts user_tweets.first.attrs[:id_str]
+
     source_tweets += filtered_tweets(user_tweets)
   
     # Twitter only returns up to 3200 of a user timeline, includes retweets.
@@ -88,7 +101,9 @@ end
   end
   
 source_tweets.each do |t|
+  data = { "id" => t[:id], "text" => t[:text]}
 puts t
+puts data
 #  data = { "tweet" => t}
 #  Tweet.create!(data)
 end

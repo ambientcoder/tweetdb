@@ -36,9 +36,10 @@ end
 ##puts "PARAMS: #{params}" if params.any?
 
 def filtered_tweets(tweets)
-  html_decoder = HTMLEntities.new
-  source_tweets = tweets.map {|t| html_decoder.decode(t.text) }
-  source_tweets
+#  html_decoder = HTMLEntities.new
+#  source_tweets = tweets.map {|t| html_decoder.decode(t.text) }
+    source_tweets = tweets.map {|t| {id: t.id, text: t.text} }
+# source_tweets
 end
 
 client = Twitter::REST::Client.new do |config|
@@ -73,6 +74,8 @@ end
   end
   
 source_tweets.each do |t|
-  data = { "tweet" => t}
-  Tweet.create!(data)
+#  data = { "tweet" => t}
+  data = { "id" => t[:id], "text" => t[:text]}
+  puts data
+#  Tweet.create!(data)
 end
