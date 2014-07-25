@@ -18,7 +18,8 @@ class Tweet
 
   def self.fetch
 # get all rows {}. dont get _id field .get tweet field. map to ruby hash from mongo hash. map the tweet key values
-    cursor = collection.find({},{:fields => {"_id" => 0, "tweet" => 1}}).limit(25).map { |h| h["tweet"] }
+    ##cursor = collection.find({},{:fields => {"_id" => 0, "text" => 1}}).limit(25).map { |h| h["text"] }
+    cursor = collection.find({},{:fields => {"_id" => 0, "id" => 1, "text" => 1}}).limit(25).map { |h| h }
   end
 
   private
@@ -38,8 +39,6 @@ class Tweet
     end
 end
 
-##puts "PARAMS: #{params}" if params.any?
-
 def filtered_tweets(tweets)
   html_decoder = HTMLEntities.new
   include_urls = $include_urls || params["include_urls"]
@@ -55,8 +54,7 @@ def filtered_tweets(tweets)
   end
 
   source_tweets.each do |t| 
-#    t.gsub!(/\b(RT|MT) .+/, '')
-    t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
+#    t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
     t.gsub!(/(@[\d\w_]+\s?)+/, '')
     t.gsub!(/[”“]/, '"')
     t.gsub!(/[‘’]/, "'")
@@ -68,7 +66,6 @@ end
 
   begin
     user_tweets = Tweet.fetch
-#    max_id = user_tweets.last.id
     source_tweets += filtered_tweets(user_tweets)
   end
   

@@ -102,8 +102,8 @@ end
   
 source_tweets.each do |t|
   data = { "id" => t[:id], "text" => t[:text]}
-puts t
 puts data
+#puts "#{t[:id]} XX #{t[:text]}"
 #  data = { "tweet" => t}
 #  Tweet.create!(data)
 end
