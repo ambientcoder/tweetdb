@@ -1,11 +1,10 @@
 # encoding: UTF-8
 
 require 'rubygems'
-require 'twitter'
 require './twitter_init'
 require './variables'
 require 'mongo'
-require 'htmlentities'
+require 'JSON'
 
 include Mongo
 
@@ -18,9 +17,8 @@ class Tweet
 
   private
     def self.establish_connection
-      #Mongo::Connection.new.db("twitter")
-
-     client = Mongo::MongoClient.from_uri(uri)
+     uri = $uri
+     client = Mongo::MongoClient.from_uri($uri)
      db_name = uri[%r{/([^/\?]+)(\?|$)}, 1]
      db = client.db(db_name)
     end
@@ -34,47 +32,30 @@ class Tweet
     end
 end
 
-##puts "PARAMS: #{params}" if params.any?
-
 def filtered_tweets(tweets)
-  html_decoder = HTMLEntities.new
-  source_tweets = tweets.map {|t| html_decoder.decode(t.text) }
-  source_tweets
+    # source_tweets = tweets.map {|t| {id: t.id, text: t.text} }
+    # source_tweets = tweets.map {|t| {id: t["id_str"], text: t["text"]} }
 end
 
-#client = Twitter::REST::Client.new do |config|
-#  config.consumer_key = $consumer_key
-#  config.consumer_secret = $consumer_secret
-#  config.access_token = $access_token
-#  config.access_token_secret = $access_token_secret
-#end
-
-  # Fetch a thousand tweets
-  begin
-#READ FROM TWEET ARCHIVE
-    user_tweets = client.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false)
-    max_id = user_tweets.last.id
-    source_tweets += filtered_tweets(user_tweets)
+Dir.glob("/Users/sscott/Dropbox/tweets/data/js/tweets/*js") do |fname|
+  # next unless fname == "/Users/sscott/Downloads/tweets/data/js/tweets/2013_02.js"
   
-    # Twitter only returns up to 3200 of a user timeline, includes retweets.
-    17.times do
-      user_tweets = client.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false, :max_id => max_id - 1)
-      puts "MAX_ID #{max_id} TWEETS: #{user_tweets.length}"
-      break if user_tweets.last.nil?
-      max_id = user_tweets.last.id
-      source_tweets += filtered_tweets(user_tweets)
-    end
-  rescue => ex
-    puts ex.message
-  end
+  my_object = JSON.parse(IO.read(fname))
+  # my_object.each do |h|
+  # source_tweets += filtered_tweets(h)
+  # end
+  source_tweets += my_object.map {|t| {id: t["id"], text: t["text"]} }    
+end 
   
-  puts "#{source_tweets.length} tweets found"
-
-  if source_tweets.length == 0
-    raise "Error fetching tweets from Twitter. Aborting."
-  end
+if source_tweets.length == 0
+  raise "Error fetching tweets from Twitter. Aborting."
+end
   
 source_tweets.each do |t|
-  data = { "tweet" => t}
+  data = { "id" => t[:id], "text" => t[:text]}
   Tweet.create!(data)
+  # puts data
 end
+
+puts "#{source_tweets.length} tweets found"
+
