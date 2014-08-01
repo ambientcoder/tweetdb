@@ -3,7 +3,7 @@ full_remote_build true
 # define the runtime language
 runtime "ruby"
 # exec is the file that will be executed:
-exec "read.rb"
+exec "ebook.rb"
 
 file "twitter_init.rb"
 file "markov.rb"
