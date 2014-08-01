@@ -23,6 +23,11 @@ class Tweet
      db = client.db(db_name)
     end
 
+    def self.get_latest_id
+      cursor = collection.find().sort({id:-1}).limit(1).map { |h| h["id"] }
+      max = cursor[0]
+    end
+
     def self.db
       @db ||= establish_connection
     end
@@ -43,37 +48,20 @@ client = Twitter::REST::Client.new do |config|
   config.access_token_secret = $access_token_secret
 end
 
-  # Fetch a thousand tweets
-  begin
-#
-  #get latest id from mongo
-  #
-    user_tweets = client.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false)
-    max_id = user_tweets.last.id
-    source_tweets += filtered_tweets(user_tweets)
+#get latest id from mongo
+max_id = Tweet.get_latest_id
+puts "oldest already stored: #{max_id}"
+user_tweets = client.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false, :since_id => max_id)
+puts "MAX_ID #{max_id} TWEETS: #{user_tweets.length}"
+source_tweets += filtered_tweets(user_tweets)
   
-#
-  #get ones after mongolatest from twitter
-  #
-##    # Twitter only returns up to 3200 of a user timeline, includes retweets.
-##    17.times do
-##      user_tweets = client.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false, :max_id => max_id - 1)
-##      puts "MAX_ID #{max_id} TWEETS: #{user_tweets.length}"
-##      break if user_tweets.last.nil?
-##      max_id = user_tweets.last.id
-##      source_tweets += filtered_tweets(user_tweets)
-##    end
-  rescue => ex
-    puts ex.message
-  end
-  
-  puts "#{source_tweets.length} tweets found"
+puts "#{source_tweets.length} tweets found"
 
-  if source_tweets.length == 0
-    raise "Error fetching tweets from Twitter. Aborting."
-  end
+if source_tweets.length == 0
+  raise "Error fetching tweets from Twitter. Aborting."
+end
   
 source_tweets.each do |t|
-  data = { "id" => t[:id].to_s, "text" => t[:text]}
+  data = { "id" => t[:id], "text" => t[:text]}
   Tweet.create!(data)
 end

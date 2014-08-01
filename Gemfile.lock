@@ -3,6 +3,8 @@ GEM
   specs:
     addressable (2.3.6)
     bson (1.10.2)
+    bson_ext (1.10.2)
+      bson (~> 1.10.2)
     buftok (0.2.0)
     equalizer (0.0.9)
     ethon (0.7.0)
@@ -58,6 +60,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bson_ext
   htmlentities
   iron_worker_ng
   mongo

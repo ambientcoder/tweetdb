@@ -19,7 +19,8 @@ class Tweet
   def self.fetch
 # get all rows {}. dont get _id field .get tweet field. map to ruby hash from mongo hash. map the tweet key values
     ##cursor = collection.find({},{:fields => {"_id" => 0, "text" => 1}}).limit(25).map { |h| h["text"] }
-    cursor = collection.find({},{:fields => {"_id" => 0, "id" => 1, "text" => 1}}).limit(25).map { |h| h }
+    #cursor = collection.find({},{:fields => {"_id" => 0, "id" => 1, "text" => 1}}).limit(25).map { |h| h }
+    cursor = collection.find({},{:fields => {"_id" => 0, "id" => 1, "text" => 1}}).map { |h| h }
   end
 
   private
