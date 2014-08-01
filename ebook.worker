@@ -1,0 +1,14 @@
+stack 'ruby-2.1'
+full_remote_build true
+# define the runtime language
+runtime "ruby"
+# exec is the file that will be executed:
+exec "read.rb"
+
+file "twitter_init.rb"
+file "markov.rb"
+file "variables.rb"
+
+gem 'twitter'
+gem 'punkt-segmenter'
+gem 'htmlentities'

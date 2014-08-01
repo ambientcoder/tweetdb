@@ -34,7 +34,7 @@ end
 
 def filtered_tweets(tweets)
     # source_tweets = tweets.map {|t| {id: t.id, text: t.text} }
-    # source_tweets = tweets.map {|t| {id: t["id_str"], text: t["text"]} }
+    # source_tweets = tweets.map {|t| {id: t["id"], text: t["text"]} }
 end
 
 Dir.glob("/Users/sscott/Dropbox/tweets/data/js/tweets/*js") do |fname|

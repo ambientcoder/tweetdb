@@ -1,0 +1,66 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.3.6)
+    bson (1.10.2)
+    buftok (0.2.0)
+    equalizer (0.0.9)
+    ethon (0.7.0)
+      ffi (>= 1.3.0)
+    faraday (0.9.0)
+      multipart-post (>= 1.2, < 3)
+    ffi (1.9.3)
+    htmlentities (4.3.2)
+    http (0.6.1)
+      http_parser.rb (~> 0.6.0)
+    http_parser.rb (0.6.0)
+    iron_core (1.0.4)
+      rest (>= 2.6.4)
+    iron_worker_ng (1.5.0)
+      bundler
+      iron_core (>= 1.0.0)
+      rubyzip (= 0.9.9)
+    json (1.8.1)
+    memoizable (0.4.2)
+      thread_safe (~> 0.3, >= 0.3.1)
+    mongo (1.10.2)
+      bson (= 1.10.2)
+    multipart-post (2.0.0)
+    naught (1.0.0)
+    net-http-persistent (2.9.4)
+    netrc (0.7.7)
+    punkt-segmenter (0.9.1)
+      unicode_utils (>= 1.0.0)
+    rest (2.7.1)
+      net-http-persistent (>= 2.9.1)
+      rest_client (>= 1.7.1)
+    rest_client (1.7.3)
+      netrc (~> 0.7.7)
+    rubyzip (0.9.9)
+    simple_oauth (0.2.0)
+    thread_safe (0.3.4)
+    twitter (5.11.0)
+      addressable (~> 2.3)
+      buftok (~> 0.2.0)
+      equalizer (~> 0.0.9)
+      faraday (~> 0.9.0)
+      http (~> 0.6.0)
+      http_parser.rb (~> 0.6.0)
+      json (~> 1.8)
+      memoizable (~> 0.4.0)
+      naught (~> 1.0)
+      simple_oauth (~> 0.2.0)
+    typhoeus (0.6.8)
+      ethon (>= 0.7.0)
+    unicode_utils (1.4.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  htmlentities
+  iron_worker_ng
+  mongo
+  punkt-segmenter
+  twitter
+  typhoeus

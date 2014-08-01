@@ -40,6 +40,8 @@ class Tweet
 end
 
 def filtered_tweets(tweets)
+puts "url: #$include_urls"
+puts "replies: #$include_replies"
   html_decoder = HTMLEntities.new
   include_urls = $include_urls || params["include_urls"]
   include_replies = $include_replies || params["include_replies"]
