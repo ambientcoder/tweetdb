@@ -24,8 +24,7 @@ class Tweet
     end
 
     def self.get_latest_id
-      cursor = collection.find().sort({id:-1}).limit(1).map { |h| h["id"] }
-      max = cursor[0]
+      cursor = collection.find().sort({id:-1}).limit(1).map { |h| h["id"] }.last
     end
 
     def self.db
@@ -52,13 +51,13 @@ end
 max_id = Tweet.get_latest_id
 puts "oldest already stored: #{max_id}"
 user_tweets = client.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false, :since_id => max_id)
-puts "MAX_ID #{max_id} TWEETS: #{user_tweets.length}"
+puts "TWEETS: #{user_tweets.length}"
 source_tweets += filtered_tweets(user_tweets)
   
 puts "#{source_tweets.length} tweets found"
 
 if source_tweets.length == 0
-  raise "Error fetching tweets from Twitter. Aborting."
+  raise "No tweets found from Twitter. Aborting."
 end
   
 source_tweets.each do |t|
