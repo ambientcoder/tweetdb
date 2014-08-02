@@ -155,6 +155,8 @@ end
 
 # format http t co as http://t.co
   tweet.gsub!(/https?.*t co /, 'http://t.co/')
+  tweet.gsub!(/https?.*tumblr com /, 'http://tumblr.com/')
+  tweet.gsub!(/https?.*bit ly /, 'http://bit.ly/')
 
 # remove trailing punctuation if tweet contains URLs
   tweet.gsub!(/\p{Punct}$/, '') if tweet =~ URI::regexp
