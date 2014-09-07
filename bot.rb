@@ -53,6 +53,9 @@ def filtered_tweets(tweets)
     source_tweets = source_tweets.reject {|t| t =~ /^@/ }
   end
 
+# reject stphn.net links that will fail
+  source_tweets = source_tweets.reject {|t| t =~ /stphn\.net/ }
+
   source_tweets.each do |t| 
 #    t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
     t.gsub!(/(@[\d\w_]+\s?)+/, '')
