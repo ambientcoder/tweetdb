@@ -41,7 +41,7 @@ end
 
 def filtered_tweets(tweets)
   html_decoder = HTMLEntities.new
-  include_urls = $include_urls || params["include_urls"]
+  include_urls = $include_tweets_with_urls || params["include_urls"]
   include_replies = $include_replies || params["include_replies"]
   source_tweets = tweets.map {|t| html_decoder.decode(t).gsub(/\b(RT|MT) .+/, '') }
 
@@ -156,7 +156,7 @@ end
   
   tweet += random_closing_punctuation if tweet !~ /[.;:?!),'"}\]\u2026]$/
 
-# format http t co as http://t.co
+# format links properly ie, http t co as http://t.co
   tweet.gsub!(/https?.*t co /, 'http://t.co/')
   tweet.gsub!(/https?.*tumblr com /, 'http://tumblr.com/')
   tweet.gsub!(/https?.*bit ly /, 'http://bit.ly/')
@@ -165,11 +165,11 @@ end
 # remove trailing punctuation if tweet contains URLs
   tweet.gsub!(/\p{Punct}$/, '') if tweet =~ URI::regexp
 
-# strip out the url
-  tweet.gsub!(/http:\/\/.+/, '')
+# strip out any url unless requested
+  tweet.gsub!(/http:\/\/.+/, '') unless $zentweet_includes_url
 
 # add a random hashtag for 1 in 3 tweets and if the tweet is less than 125 chars
-  tweet += " #{random_hashtag}" if rand(2) == 0 && tweet.length < 125
+  tweet += " #{random_hashtag}" if rand(2) == 0 && tweet.length < 125 && $add_hashtag
 
   if params["tweet"]
     if !tweet.nil? && tweet != ''

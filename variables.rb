@@ -5,5 +5,7 @@ $rand_limit = 6
 $markov_index = 3
 #
 # defaults are false
-$include_urls = true
+$include_tweets_with_urls = true
 $include_replies = true
+$zentweet_includes_url = false
+$add_hashtag = false
