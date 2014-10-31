@@ -170,6 +170,7 @@ end
 
 # add a random hashtag for 1 in 3 tweets and if the tweet is less than 125 chars
   tweet += " #{random_hashtag}" if rand(2) == 0 && tweet.length < 125 && $add_hashtag
+  tweet.strip!
 
   if params["tweet"]
     if !tweet.nil? && tweet != ''
