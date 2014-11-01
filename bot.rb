@@ -176,8 +176,8 @@ end
     if !tweet.nil? && tweet != ''
       puts "TWEET: #{tweet}"
       client.update(tweet)
-    else
-      raise "ERROR: EMPTY TWEET"
+#    else
+#      raise "ERROR: EMPTY TWEET"
     end
   else
     puts "DEBUG: #{tweet}"
