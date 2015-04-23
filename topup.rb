@@ -57,7 +57,7 @@ source_tweets += filtered_tweets(user_tweets)
 puts "#{source_tweets.length} tweets found"
 
 if source_tweets.length == 0
-  raise "No tweets found from Twitter. Aborting."
+  puts "No tweets found from Twitter. Aborting."
 end
   
 source_tweets.each do |t|
