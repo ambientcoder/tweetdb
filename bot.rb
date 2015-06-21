@@ -76,7 +76,9 @@ end
 HASHTAG = ['#discuss', '#change', '#strategy', '#power', '#politics', '#art' , '#repetition', '#conceptual', '#slow', '#zen', '#future', '#oblique']
 
 def random_hashtag
-  HASHTAG[rand(HASHTAG.length)]
+  HASHTAG.sample
+#   '#' + File.read('/usr/share/dict/words').lines.sample
+#   '#' + File.read('/usr/share/dict/words').lines.select {|l| (6..12).cover?(l.strip.size)}.sample.strip
 end
 
 source_tweets = []
@@ -168,10 +170,13 @@ end
 # strip out any url unless requested
   tweet.gsub!(/http:\/\/.+/, '') unless $zentweet_includes_url
 
-# add a random hashtag for 1 in 5 tweets if add_hashtag is set and if the tweet is less than 125 chars
-  tweet += " #{random_hashtag}" if rand(4) == 0 && tweet.length < 125 && $add_hashtag
+# add a random hashtag for 1 in 5 tweets if add_hashtag is true and if the tweet is less than 125 chars
 # always add a hashtag if hashtag param is passed
-  tweet += " #{random_hashtag}" if tweet.length < 125 && params["hashtag"]
+  if !params["hashtag"]
+    tweet += " #{random_hashtag}" if rand(5) == 0 && tweet.length < 125 && $add_hashtag
+  else
+    tweet += " #{random_hashtag}" if tweet.length < 125
+  end
   tweet.strip!
 
   if params["tweet"]
