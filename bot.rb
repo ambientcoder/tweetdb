@@ -168,8 +168,10 @@ end
 # strip out any url unless requested
   tweet.gsub!(/http:\/\/.+/, '') unless $zentweet_includes_url
 
-# add a random hashtag for 1 in 3 tweets and if the tweet is less than 125 chars
-  tweet += " #{random_hashtag}" if rand(2) == 0 && tweet.length < 125 && $add_hashtag
+# add a random hashtag for 1 in 5 tweets if add_hashtag is set and if the tweet is less than 125 chars
+  tweet += " #{random_hashtag}" if rand(4) == 0 && tweet.length < 125 && $add_hashtag
+# always add a hashtag if hashtag param is passed
+  tweet += " #{random_hashtag}" if tweet.length < 125 && params["hashtag"]
   tweet.strip!
 
   if params["tweet"]

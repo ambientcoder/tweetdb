@@ -8,4 +8,4 @@ $markov_index = 2
 $include_tweets_with_urls = true
 $include_replies = true
 $zentweet_includes_url = false
-$add_hashtag = false
+$add_hashtag = true
