@@ -73,10 +73,10 @@ def random_closing_punctuation
   CLOSING_PUNCTUATION[rand(CLOSING_PUNCTUATION.length)]
 end
 
-HASHTAG = ['#discuss', '#change', '#strategy', '#power', '#politics', '#art' , '#repetition', '#conceptual', '#slow', '#zen', '#future', '#oblique']
+HASHTAG = ['auspol', 'breaking', 'punk', 'conflation', 'now', 'abstract', 'wabisabi', 'minimalism', 'movingforward', 'discuss', 'change', 'strategy', 'power', 'politics', 'art' , 'repetition', 'conceptual', 'slow', 'zen', 'future', 'oblique']
 
 def random_hashtag
-  HASHTAG.sample
+  '#' + HASHTAG.sample
 #   '#' + File.read('/usr/share/dict/words').lines.sample
 #   '#' + File.read('/usr/share/dict/words').lines.select {|l| (6..12).cover?(l.strip.size)}.sample.strip
 end
@@ -169,6 +169,8 @@ end
 
 # strip out any url unless requested
   tweet.gsub!(/http:\/\/.+/, '') unless $zentweet_includes_url
+# remove word Photo from the start
+  tweet.gsub!(/^Photo/, '')
 
 # add a random hashtag for 1 in 5 tweets if add_hashtag is true and if the tweet is less than 125 chars
 # always add a hashtag if hashtag param is passed
